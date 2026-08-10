@@ -6,6 +6,7 @@ import UserManagement from './UserManagement';
 import DepartmentManagement from './DepartmentManagement';
 import EvaluationTemplates from './EvaluationTemplates';
 import EvaluationInitiation from './EvaluationInitiation';
+import BulkInitiation from './BulkInitiation';
 
 export default function AdminPanel() {
   const { user } = useAuth();
@@ -105,7 +106,13 @@ export default function AdminPanel() {
           onClick={() => setActiveTab('initiation')}
           className={`text-left px-4 py-3 border transition-colors ${activeTab === 'initiation' ? 'bg-black text-white border-black' : 'bg-white border-gray-200 hover:border-black'}`}
         >
-          Evaluation Initiation
+          Manual Initiation
+        </button>
+        <button 
+          onClick={() => setActiveTab('bulk-initiation')}
+          className={`text-left px-4 py-3 border transition-colors ${activeTab === 'bulk-initiation' ? 'bg-black text-white border-black' : 'bg-white border-gray-200 hover:border-black'}`}
+        >
+          Bulk Initiation (CSV)
         </button>
       </div>
 
@@ -162,6 +169,7 @@ export default function AdminPanel() {
         {activeTab === 'departments' && <DepartmentManagement />}
         {activeTab === 'templates' && <EvaluationTemplates />}
         {activeTab === 'initiation' && <EvaluationInitiation />}
+        {activeTab === 'bulk-initiation' && <BulkInitiation />}
       </div>
     </div>
   );

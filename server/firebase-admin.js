@@ -1,5 +1,6 @@
-const admin = require("firebase-admin");
+const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
+const { getAuth } = require("firebase-admin/auth");
 
 // The user needs to download their serviceAccountKey.json from Firebase Console
 // and place it in the server directory, or use environment variables.
@@ -7,15 +8,18 @@ const { getFirestore } = require("firebase-admin/firestore");
 try {
   const serviceAccount = require("./serviceAccountKey.json");
 
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+  initializeApp({
+    credential: cert(serviceAccount)
   });
 } catch (error) {
-  console.warn("WARNING: serviceAccountKey.json not found. Firebase Admin not initialized correctly.");
+  console.warn("WARNING: Firebase Admin initialization failed. Error:", error.message);
   // Initialize without credentials for now, will fail on actual calls but allows server to start
-  admin.initializeApp();
+  try {
+    initializeApp();
+  } catch(e) {}
 }
 
 const db = getFirestore();
+const auth = getAuth();
 
-module.exports = { admin, db };
+module.exports = { db, auth };

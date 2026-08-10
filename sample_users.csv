@@ -1,0 +1,8 @@
+name,email,department,designation,role
+Admin User,admin@scot.lk,HR,HR Administrator,admin
+Management Head,manager@scot.lk,IT,Head of Department,management
+Target Employee,target@scot.lk,IT,Software Engineer,employee
+Senior Peer 1,senior1@scot.lk,IT,Senior Software Engineer,employee
+Senior Peer 2,senior2@scot.lk,IT,Tech Lead,employee
+Junior Peer 1,junior1@scot.lk,IT,Junior Software Engineer,employee
+Junior Peer 2,junior2@scot.lk,IT,QA Engineer,employee

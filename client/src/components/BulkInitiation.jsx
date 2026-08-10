@@ -54,8 +54,8 @@ export default function BulkInitiation() {
 
     try {
       const token = await user.getIdToken();
-      // Adjust URL as needed if deploying
-      const res = await fetch('http://localhost:5000/api/evaluate/bulk-initiate', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/evaluate/bulk-initiate`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

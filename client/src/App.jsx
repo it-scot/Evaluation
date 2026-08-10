@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useState } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AdminPanel from './components/AdminPanel';
+import EmployeePortal from './components/EmployeePortal';
 
 const Login = () => {
   const { loginWithGoogle, user } = useAuth();
@@ -85,20 +86,6 @@ const ManagementDashboard = () => (
   <div>
     <h2 className="mb-6">Management Dashboard</h2>
     <p>View organizational scores and metrics.</p>
-  </div>
-);
-
-const EmployeePortal = () => (
-  <div>
-    <h2 className="mb-6">Employee Portal</h2>
-    <div className="card mb-6">
-      <h3 className="text-xl mb-4">Pending Evaluations</h3>
-      <p className="text-gray-500 text-sm">No pending evaluations.</p>
-    </div>
-    <div className="card">
-      <h3 className="text-xl mb-4">Completed Evaluations</h3>
-      <p className="text-gray-500 text-sm">No completed evaluations.</p>
-    </div>
   </div>
 );
 

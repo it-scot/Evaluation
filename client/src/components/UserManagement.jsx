@@ -44,8 +44,8 @@ export default function UserManagement() {
 
     try {
       const token = await user.getIdToken();
-      // Adjust the port/URL based on your environment
-      const response = await fetch('http://localhost:5000/api/users/upload', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${apiUrl}/api/users/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

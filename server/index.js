@@ -5,12 +5,13 @@ const multer = require("multer");
 const csv = require("csv-parser");
 const fs = require("fs");
 const { db, auth } = require("./firebase-admin");
+const { Readable } = require("stream");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Middleware to verify Firebase Auth Token
 const verifyToken = async (req, res, next) => {
@@ -37,7 +38,7 @@ app.post("/api/users/upload", verifyToken, upload.single("file"), (req, res) => 
   }
 
   const results = [];
-  fs.createReadStream(req.file.path)
+  Readable.from(req.file.buffer)
     .pipe(csv())
     .on("data", (data) => results.push(data))
     .on("end", async () => {
@@ -62,8 +63,6 @@ app.post("/api/users/upload", verifyToken, upload.single("file"), (req, res) => 
         }
 
         await batch.commit();
-        // Clean up uploaded file
-        fs.unlinkSync(req.file.path);
         
         res.json({ message: "Users imported successfully", count: results.length });
       } catch (error) {
@@ -75,15 +74,18 @@ app.post("/api/users/upload", verifyToken, upload.single("file"), (req, res) => 
 
 // Route: Bulk Initiate Evaluations from Department CSV
 app.post("/api/evaluate/bulk-initiate", verifyToken, upload.single("file"), (req, res) => {
+  console.log("Bulk Initiate Request received!");
+  console.log("Body:", req.body);
+  console.log("File:", req.file ? "Exists" : "Missing");
+
   const { selfTemplateId, primaryTemplateId, upLevelTemplateId, sameLevelTemplateId } = req.body;
   
   if (!req.file || !selfTemplateId || !primaryTemplateId || !upLevelTemplateId || !sameLevelTemplateId) {
-    if (req.file) fs.unlinkSync(req.file.path);
     return res.status(400).json({ error: "Missing file or template IDs" });
   }
 
   const employees = [];
-  fs.createReadStream(req.file.path)
+  Readable.from(req.file.buffer)
     .pipe(csv())
     .on("data", (data) => {
       // Must have email, name, and hierarchy_level
@@ -98,7 +100,6 @@ app.post("/api/evaluate/bulk-initiate", verifyToken, upload.single("file"), (req
       }
     })
     .on("end", async () => {
-      fs.unlinkSync(req.file.path); // Clean up file
       
       if (employees.length === 0) {
         return res.status(400).json({ error: "No valid employees found in CSV" });

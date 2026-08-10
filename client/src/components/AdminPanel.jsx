@@ -51,8 +51,8 @@ export default function AdminPanel() {
     setCalculating(true);
     try {
       const token = await user.getIdToken();
-      // Adjust URL as needed
-      const res = await fetch('http://localhost:5000/api/evaluate/calculate', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/evaluate/calculate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

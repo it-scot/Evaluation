@@ -1,8 +1,8 @@
 name,email,department,designation,hierarchy_level
 Disitha,disitha@scot.lk,ME,Head of Department,3
-Senior One,senior1@scot.lk,ME,Senior Engineer,2
-Senior Two,senior2@scot.lk,ME,Senior Engineer,2
+Senior One,user1@scot.lk,ME,Senior Engineer,2
+Senior Two,user2@scot.lk,ME,Senior Engineer,2
 Mid One,mid1@scot.lk,ME,Engineer,2
-Junior One,junior1@scot.lk,ME,Junior Engineer,1
+Junior One,user3@scot.lk,ME,Junior Engineer,1
 Junior Two,junior2@scot.lk,ME,Junior Engineer,1
-Junior Three,junior3@scot.lk,ME,Trainee,1
+Junior Three,user4@scot.lk,ME,Trainee,1

@@ -6,7 +6,12 @@ const { getAuth } = require("firebase-admin/auth");
 // and place it in the server directory, or use environment variables.
 // For now, we will assume it's loaded from a file or environment.
 try {
-  const serviceAccount = require("./serviceAccountKey.json");
+  let serviceAccount;
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  } else {
+    serviceAccount = require("./serviceAccountKey.json");
+  }
 
   initializeApp({
     credential: cert(serviceAccount)

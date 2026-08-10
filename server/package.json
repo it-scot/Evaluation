@@ -17,5 +17,8 @@
     "express": "^5.2.1",
     "firebase-admin": "^14.2.0",
     "multer": "^2.2.0"
+  },
+  "overrides": {
+    "jose": "4.15.5"
   }
 }

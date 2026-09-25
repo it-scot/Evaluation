@@ -8,13 +8,15 @@ import EvaluationTemplates from './EvaluationTemplates';
 import EvaluationInitiation from './EvaluationInitiation';
 import BulkInitiation from './BulkInitiation';
 
+import { LayoutDashboard, Users, Building2, ClipboardList, Target, FileSpreadsheet, Sparkles, Inbox } from 'lucide-react';
+
 const navItems = [
-  { key: 'dashboard', label: 'Dashboard Overview', icon: '📊' },
-  { key: 'users', label: 'User Management', icon: '👥' },
-  { key: 'departments', label: 'Department Management', icon: '🏢' },
-  { key: 'templates', label: 'Evaluation Templates', icon: '📋' },
-  { key: 'initiation', label: 'Manual Initiation', icon: '🎯' },
-  { key: 'bulk-initiation', label: 'Bulk Initiation (CSV)', icon: '📁' },
+  { key: 'dashboard', label: 'Dashboard Overview', icon: <LayoutDashboard size={18} /> },
+  { key: 'users', label: 'User Management', icon: <Users size={18} /> },
+  { key: 'departments', label: 'Department Management', icon: <Building2 size={18} /> },
+  { key: 'templates', label: 'Evaluation Templates', icon: <ClipboardList size={18} /> },
+  { key: 'initiation', label: 'Manual Initiation', icon: <Target size={18} /> },
+  { key: 'bulk-initiation', label: 'Bulk Initiation (CSV)', icon: <FileSpreadsheet size={18} /> },
 ];
 
 export default function AdminPanel() {
@@ -97,7 +99,7 @@ export default function AdminPanel() {
               onClick={() => setActiveTab(item.key)}
               className={`nav-btn flex items-center gap-3 ${activeTab === item.key ? 'active' : ''}`}
             >
-              <span className="text-base">{item.icon}</span>
+              <span className="flex items-center justify-center opacity-80">{item.icon}</span>
               <span>{item.label}</span>
             </button>
           ))}
@@ -154,16 +156,18 @@ export default function AdminPanel() {
                       <button 
                         onClick={() => handleCalculateScore(e.cycleId)}
                         disabled={calculating}
-                        className="btn-secondary px-4 py-2 text-xs whitespace-nowrap"
+                        className="btn-secondary px-4 py-2 text-xs flex items-center gap-1.5 whitespace-nowrap"
                       >
-                        {calculating ? 'Processing...' : '✨ Finalize & Calculate'}
+                        {calculating ? 'Processing...' : <><Sparkles size={14} /> Finalize & Calculate</>}
                       </button>
                     )}
                   </div>
                 ))}
                 {evaluations.length === 0 && (
                   <div className="text-center py-10" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-                    <div className="text-4xl mb-3">📭</div>
+                    <div className="flex justify-center mb-3">
+                      <Inbox size={32} opacity={0.5} />
+                    </div>
                     <p className="font-medium">No evaluation cycles found.</p>
                     <p className="text-xs mt-1">Start by creating a new evaluation.</p>
                   </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { doc, getDoc, collection, addDoc, updateDoc } from 'firebase/firestore';
+import { ArrowLeft, Loader2, AlertCircle, Check } from 'lucide-react';
 
 export default function EvaluationForm({ assignment, onBack }) {
   const [template, setTemplate] = useState(null);
@@ -85,8 +86,10 @@ export default function EvaluationForm({ assignment, onBack }) {
   );
 
   if (!template) return (
-    <div className="glass-card text-center max-w-md mx-auto">
-      <div className="text-4xl mb-3">⚠️</div>
+      <div className="glass-card text-center max-w-md mx-auto">
+      <div className="flex justify-center mb-4">
+        <AlertCircle size={40} style={{ color: '#fca5a5' }} />
+      </div>
       <p className="font-semibold" style={{ color: '#fca5a5' }}>Error loading form template.</p>
     </div>
   );
@@ -107,7 +110,7 @@ export default function EvaluationForm({ assignment, onBack }) {
           onMouseEnter={(e) => e.target.style.color = '#c4b5fd'}
           onMouseLeave={(e) => e.target.style.color = '#a78bfa'}
         >
-          ← Back to Inbox
+          <ArrowLeft size={16} /> Back to Inbox
         </button>
         
         {/* Header */}
@@ -185,8 +188,12 @@ export default function EvaluationForm({ assignment, onBack }) {
           <hr className="section-divider" />
 
           <div className="flex justify-end pt-2">
-            <button type="submit" disabled={submitting} className="btn-primary px-10 py-3.5 text-base">
-              {submitting ? '⏳ Submitting...' : '✅ Submit Evaluation'}
+            <button type="submit" disabled={submitting} className="btn-primary px-10 py-3.5 text-base flex items-center gap-2">
+              {submitting ? (
+                <><Loader2 size={18} className="animate-spin" /> Submitting...</>
+              ) : (
+                <><Check size={18} /> Submit Evaluation</>
+              )}
             </button>
           </div>
         </form>

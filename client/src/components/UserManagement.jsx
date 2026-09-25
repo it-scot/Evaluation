@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
+import { Users, Upload, Loader2, UserX } from 'lucide-react';
 
 export default function UserManagement() {
   const { user } = useAuth();
@@ -73,7 +74,9 @@ export default function UserManagement() {
     <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
       <div className="glass-card mb-6">
         <div className="flex items-center gap-3 mb-6">
-          <span className="text-2xl">👥</span>
+          <div className="p-2 rounded-lg" style={{ background: 'rgba(99, 102, 241, 0.2)', color: '#818cf8' }}>
+            <Users size={24} />
+          </div>
           <h2 className="text-2xl font-bold gradient-text m-0">User Management</h2>
         </div>
         
@@ -93,9 +96,13 @@ export default function UserManagement() {
             <button 
               onClick={handleUpload} 
               disabled={loading || !file}
-              className="btn-primary whitespace-nowrap disabled:opacity-50"
+              className="btn-primary flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50"
             >
-              {loading ? '⏳ Uploading...' : '📤 Upload CSV'}
+              {loading ? (
+                <><Loader2 size={16} className="animate-spin" /> Uploading...</>
+              ) : (
+                <><Upload size={16} /> Upload CSV</>
+              )}
             </button>
           </div>
           {message && (
@@ -135,7 +142,9 @@ export default function UserManagement() {
               {users.length === 0 && (
                 <tr>
                   <td colSpan="5" className="text-center py-10" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-                    <div className="text-3xl mb-2">👤</div>
+                    <div className="flex justify-center mb-2">
+                      <UserX size={28} opacity={0.6} />
+                    </div>
                     No users found.
                   </td>
                 </tr>

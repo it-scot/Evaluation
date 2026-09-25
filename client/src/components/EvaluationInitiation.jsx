@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { Target, User, Settings, ArrowUp, ArrowLeftRight, Loader2, Send } from 'lucide-react';
 
 export default function EvaluationInitiation() {
   const [users, setUsers] = useState([]);
@@ -94,7 +95,9 @@ export default function EvaluationInitiation() {
     <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
       <div className="glass-card">
         <div className="flex items-center gap-3 mb-6">
-          <span className="text-2xl">🎯</span>
+          <div className="p-2 rounded-lg" style={{ background: 'rgba(99, 102, 241, 0.2)', color: '#818cf8' }}>
+            <Target size={24} />
+          </div>
           <h2 className="text-2xl font-bold gradient-text m-0">Evaluation Initiation</h2>
         </div>
         
@@ -110,7 +113,7 @@ export default function EvaluationInitiation() {
             {/* Target Employee */}
             <div className="glass-section">
               <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{ color: '#e2e8f0' }}>
-                <span>👤</span> Evaluatee Details
+                <User size={18} style={{ color: '#a78bfa' }} /> Evaluatee Details
               </h3>
               <hr className="section-divider" style={{ margin: '0 0 1rem 0' }} />
               
@@ -144,7 +147,7 @@ export default function EvaluationInitiation() {
             {/* Form & Primary */}
             <div className="glass-section">
               <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{ color: '#e2e8f0' }}>
-                <span>⚙️</span> Evaluation Setup
+                <Settings size={18} style={{ color: '#a78bfa' }} /> Evaluation Setup
               </h3>
               <hr className="section-divider" style={{ margin: '0 0 1rem 0' }} />
               
@@ -177,7 +180,7 @@ export default function EvaluationInitiation() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{ color: '#e2e8f0' }}>
-                  <span>⬆️</span> Peer Evaluators (Up-Level)
+                  <ArrowUp size={18} style={{ color: '#a78bfa' }} /> Peer Evaluators (Up-Level)
                 </h3>
                 <hr className="section-divider" style={{ margin: '0 0 1rem 0' }} />
                 <div className="space-y-4">
@@ -204,7 +207,7 @@ export default function EvaluationInitiation() {
               
               <div>
                 <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{ color: '#e2e8f0' }}>
-                  <span>↔️</span> Peer Evaluators (Same/Sub)
+                  <ArrowLeftRight size={18} style={{ color: '#a78bfa' }} /> Peer Evaluators (Same/Sub)
                 </h3>
                 <hr className="section-divider" style={{ margin: '0 0 1rem 0' }} />
                 <div className="space-y-4">
@@ -237,8 +240,12 @@ export default function EvaluationInitiation() {
             <button type="button" onClick={() => window.location.reload()} className="btn-secondary">
               Cancel
             </button>
-            <button type="submit" disabled={loading} className="btn-primary">
-              {loading ? '⏳ Processing...' : '🚀 Initiate Evaluation'}
+            <button type="submit" disabled={loading} className="btn-primary flex items-center justify-center gap-2">
+              {loading ? (
+                <><Loader2 size={16} className="animate-spin" /> Processing...</>
+              ) : (
+                <><Send size={16} /> Initiate Evaluation</>
+              )}
             </button>
           </div>
         </form>

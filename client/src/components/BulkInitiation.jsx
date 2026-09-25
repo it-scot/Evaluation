@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
+import { FolderUp, BookOpen, FileText, Paperclip, Loader2, Sparkles } from 'lucide-react';
 
 export default function BulkInitiation() {
   const { user } = useAuth();
@@ -88,12 +89,16 @@ export default function BulkInitiation() {
     <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
       <div className="glass-card">
         <div className="flex items-center gap-3 mb-6">
-          <span className="text-2xl">📁</span>
+          <div className="p-2 rounded-lg" style={{ background: 'rgba(99, 102, 241, 0.2)', color: '#818cf8' }}>
+            <FolderUp size={24} />
+          </div>
           <h2 className="text-2xl font-bold gradient-text m-0">Department Bulk Initiation</h2>
         </div>
         
         <div className="info-box mb-8">
-          <p className="font-bold mb-2" style={{ color: '#e2e8f0' }}>📘 Instructions</p>
+          <p className="font-bold mb-2 flex items-center gap-2" style={{ color: '#e2e8f0' }}>
+            <BookOpen size={16} style={{ color: '#a78bfa' }} /> Instructions
+          </p>
           <p>Upload a CSV file containing the employees for a specific department. The system will automatically detect the Head of Department and randomly assign Up-level and Same/Sub-level peer evaluators for every employee, using the specific templates you select below.</p>
           <div className="mt-3 p-3 rounded-lg" style={{ background: 'rgba(0, 0, 0, 0.2)', fontFamily: 'monospace', fontSize: '0.75rem' }}>
             <span style={{ color: '#a78bfa' }}>Required Columns:</span> name, email, department, designation, hierarchy_level
@@ -113,7 +118,7 @@ export default function BulkInitiation() {
           <div className="glass-section">
             
             <h3 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#e2e8f0' }}>
-              <span>📝</span> Select Perspective Templates
+              <FileText size={18} style={{ color: '#a78bfa' }} /> Select Perspective Templates
             </h3>
             <hr className="section-divider" style={{ margin: '0 0 1.25rem 0' }} />
             
@@ -154,7 +159,9 @@ export default function BulkInitiation() {
             <hr className="section-divider" />
 
             <div>
-              <label className="block text-sm font-semibold mb-2" style={{ color: '#c4b5fd' }}>📎 Department CSV File</label>
+              <label className="flex items-center gap-2 text-sm font-semibold mb-3" style={{ color: '#c4b5fd' }}>
+                <Paperclip size={16} /> Department CSV File
+              </label>
               <input 
                 id="csv-upload"
                 type="file" 
@@ -167,8 +174,12 @@ export default function BulkInitiation() {
           </div>
 
           <div className="flex justify-end mt-8">
-            <button type="submit" disabled={loading} className="btn-primary px-8">
-              {loading ? '⏳ Processing...' : '🚀 Auto-Assign & Initiate'}
+            <button type="submit" disabled={loading} className="btn-primary px-8 flex items-center gap-2">
+              {loading ? (
+                <><Loader2 size={16} className="animate-spin" /> Processing...</>
+              ) : (
+                <><Sparkles size={16} /> Auto-Assign & Initiate</>
+              )}
             </button>
           </div>
         </form>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { ClipboardList, Plus, Trash2, Send, Loader2, Inbox, X } from 'lucide-react';
 
 export default function EvaluationTemplates() {
   const [templates, setTemplates] = useState([]);
@@ -70,7 +71,9 @@ export default function EvaluationTemplates() {
     <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
       <div className="glass-card mb-6">
         <div className="flex items-center gap-3 mb-6">
-          <span className="text-2xl">📋</span>
+          <div className="p-2 rounded-lg" style={{ background: 'rgba(99, 102, 241, 0.2)', color: '#818cf8' }}>
+            <ClipboardList size={24} />
+          </div>
           <h2 className="text-2xl font-bold gradient-text m-0">Evaluation Templates</h2>
         </div>
         
@@ -129,7 +132,7 @@ export default function EvaluationTemplates() {
                           e.target.style.borderColor = 'rgba(239, 68, 68, 0.2)';
                         }}
                       >
-                        ✕
+                        <X size={16} />
                       </button>
                     )}
                   </div>
@@ -149,12 +152,16 @@ export default function EvaluationTemplates() {
                 onMouseEnter={(e) => e.target.style.color = '#c4b5fd'}
                 onMouseLeave={(e) => e.target.style.color = '#a78bfa'}
               >
-                <span style={{ fontSize: '1.1em' }}>+</span> Add another question
+                <Plus size={16} /> Add another question
               </button>
             </div>
 
-            <button type="submit" disabled={loading} className="btn-primary">
-              {loading ? '⏳ Publishing...' : '🚀 Publish Template'}
+            <button type="submit" disabled={loading} className="btn-primary flex items-center justify-center gap-2">
+              {loading ? (
+                <><Loader2 size={16} className="animate-spin" /> Publishing...</>
+              ) : (
+                <><Send size={16} /> Publish Template</>
+              )}
             </button>
           </form>
         </div>
@@ -200,13 +207,15 @@ export default function EvaluationTemplates() {
                   e.target.style.borderColor = 'rgba(239, 68, 68, 0.2)';
                 }}
               >
-                🗑 Delete
+                <Trash2 size={14} className="mr-1" style={{ display: 'inline' }} /> Delete
               </button>
             </div>
           ))}
           {templates.length === 0 && (
             <div className="text-center py-10" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-              <div className="text-4xl mb-3">📋</div>
+              <div className="flex justify-center mb-3">
+                <Inbox size={32} opacity={0.5} />
+              </div>
               <p className="font-medium">No templates created yet.</p>
               <p className="text-xs mt-1">Create your first template above.</p>
             </div>

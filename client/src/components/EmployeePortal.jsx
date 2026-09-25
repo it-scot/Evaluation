@@ -4,10 +4,11 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 import EvaluationForm from './EvaluationForm';
 import ResultsPortal from './ResultsPortal';
+import { Home, Trophy, Play, CheckCircle2, ClipboardCheck } from 'lucide-react';
 
 const employeeNavItems = [
-  { key: 'dashboard', label: 'My Dashboard', icon: '🏠' },
-  { key: 'results', label: 'My Final Scores', icon: '🏆' },
+  { key: 'dashboard', label: 'My Dashboard', icon: <Home size={18} /> },
+  { key: 'results', label: 'My Final Scores', icon: <Trophy size={18} /> },
 ];
 
 export default function EmployeePortal() {
@@ -85,7 +86,7 @@ export default function EmployeePortal() {
               onClick={() => setActiveTab(item.key)}
               className={`nav-btn flex items-center gap-3 ${activeTab === item.key ? 'active' : ''}`}
             >
-              <span className="text-base">{item.icon}</span>
+              <span className="flex items-center justify-center opacity-80">{item.icon}</span>
               <span>{item.label}</span>
             </button>
           ))}
@@ -120,13 +121,15 @@ export default function EmployeePortal() {
                       onClick={() => setActiveEvaluation(assign)}
                       className="btn-primary px-5 py-2 text-xs flex items-center gap-2"
                     >
-                      <span>▶</span> Start Evaluation
+                      <Play size={14} fill="currentColor" /> Start Evaluation
                     </button>
                   </div>
                 ))}
                 {pendingEvaluations.length === 0 && (
                   <div className="text-center py-10" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-                    <div className="text-4xl mb-3">✅</div>
+                    <div className="flex justify-center mb-3">
+                      <CheckCircle2 size={32} opacity={0.5} />
+                    </div>
                     <p className="font-medium">All caught up!</p>
                     <p className="text-xs mt-1">No pending evaluations at this time.</p>
                   </div>
@@ -162,7 +165,9 @@ export default function EmployeePortal() {
                 ))}
                 {completedEvaluations.length === 0 && (
                   <div className="text-center py-10" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-                    <div className="text-4xl mb-3">📝</div>
+                    <div className="flex justify-center mb-3">
+                      <ClipboardCheck size={32} opacity={0.5} />
+                    </div>
                     <p className="font-medium">No completed evaluations yet.</p>
                   </div>
                 )}

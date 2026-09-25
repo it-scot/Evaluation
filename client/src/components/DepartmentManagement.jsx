@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { Building2, Save, Loader2, SearchX } from 'lucide-react';
 
 export default function DepartmentManagement() {
   const [departments, setDepartments] = useState([]);
@@ -48,7 +49,9 @@ export default function DepartmentManagement() {
     <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
       <div className="glass-card mb-6">
         <div className="flex items-center gap-3 mb-6">
-          <span className="text-2xl">🏢</span>
+          <div className="p-2 rounded-lg" style={{ background: 'rgba(99, 102, 241, 0.2)', color: '#818cf8' }}>
+            <Building2 size={24} />
+          </div>
           <h2 className="text-2xl font-bold gradient-text m-0">Department Management</h2>
         </div>
         
@@ -106,8 +109,12 @@ export default function DepartmentManagement() {
                 </label>
               </div>
             </div>
-            <button type="submit" disabled={loading} className="btn-primary mt-2">
-              {loading ? '⏳ Saving...' : '💾 Save Department'}
+            <button type="submit" disabled={loading} className="btn-primary mt-2 flex items-center justify-center gap-2">
+              {loading ? (
+                <><Loader2 size={16} className="animate-spin" /> Saving...</>
+              ) : (
+                <><Save size={16} /> Save Department</>
+              )}
             </button>
           </form>
         </div>
@@ -142,7 +149,9 @@ export default function DepartmentManagement() {
               {departments.length === 0 && (
                 <tr>
                   <td colSpan="3" className="text-center py-10" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-                    <div className="text-3xl mb-2">🏢</div>
+                    <div className="flex justify-center mb-3">
+                      <SearchX size={32} opacity={0.5} />
+                    </div>
                     No departments added.
                   </td>
                 </tr>

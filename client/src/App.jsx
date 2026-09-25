@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AdminPanel from './components/AdminPanel';
 import EmployeePortal from './components/EmployeePortal';
+import { Lock } from 'lucide-react';
 
 const Login = () => {
   const { loginWithGoogle, user } = useAuth();
@@ -97,7 +98,9 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="glass-card text-center max-w-md">
-          <div className="text-5xl mb-4">🔒</div>
+          <div className="flex justify-center mb-4">
+            <Lock size={48} style={{ color: '#fca5a5' }} />
+          </div>
           <h2 className="text-xl font-bold mb-2">Unauthorized Access</h2>
           <p style={{ color: 'rgba(255, 255, 255, 0.5)' }}>You don't have permission to view this page.</p>
         </div>

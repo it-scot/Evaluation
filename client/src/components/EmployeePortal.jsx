@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 import EvaluationForm from './EvaluationForm';
 import ResultsPortal from './ResultsPortal';
+
+const employeeNavItems = [
+  { key: 'dashboard', label: 'My Dashboard', icon: '🏠' },
+  { key: 'results', label: 'My Final Scores', icon: '🏆' },
+];
 
 export default function EmployeePortal() {
   const { user, userData } = useAuth();
@@ -68,68 +73,102 @@ export default function EmployeePortal() {
   return (
     <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-6">
       
-      {/* Sidebar for Navigation (matches Admin panel style) */}
-      <div className="w-full md:w-64 shrink-0 flex flex-col gap-2">
-        <button 
-          onClick={() => setActiveTab('dashboard')}
-          className={`text-left px-4 py-3 border transition-colors ${activeTab === 'dashboard' ? 'bg-black text-white border-black' : 'bg-white border-gray-200 hover:border-black'}`}
-        >
-          My Dashboard
-        </button>
-        <button 
-          onClick={() => setActiveTab('results')}
-          className={`text-left px-4 py-3 border transition-colors ${activeTab === 'results' ? 'bg-black text-white border-black' : 'bg-white border-gray-200 hover:border-black'}`}
-        >
-          My Final Scores
-        </button>
+      {/* Sidebar Navigation */}
+      <div className="w-full md:w-64 shrink-0">
+        <div className="glass-card p-3 flex flex-col gap-1.5" style={{ position: 'sticky', top: '80px' }}>
+          <div className="px-4 py-2 mb-2">
+            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: 'rgba(167, 139, 250, 0.6)' }}>Navigation</p>
+          </div>
+          {employeeNavItems.map(item => (
+            <button 
+              key={item.key}
+              onClick={() => setActiveTab(item.key)}
+              className={`nav-btn flex items-center gap-3 ${activeTab === item.key ? 'active' : ''}`}
+            >
+              <span className="text-base">{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="flex-1 space-y-6">
+      <div className="flex-1 space-y-6 min-w-0">
         {activeTab === 'dashboard' && (
-          <>
-            <div className="card">
-              <h2 className="mb-6 border-b pb-4">Pending Evaluations</h2>
-              <div className="space-y-4">
+          <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
+            {/* Pending Evaluations */}
+            <div className="glass-card mb-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold gradient-text m-0">Pending Evaluations</h2>
+                {pendingEvaluations.length > 0 && (
+                  <span className="badge badge-warning">{pendingEvaluations.length} pending</span>
+                )}
+              </div>
+              <hr className="section-divider" style={{ margin: '0 0 1.25rem 0' }} />
+
+              <div className="space-y-3">
                 {pendingEvaluations.map(assign => (
-                  <div key={assign.id} className="flex justify-between items-center p-4 border border-gray-200 bg-gray-50 hover:bg-white transition-colors">
+                  <div key={assign.id} className="eval-item flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                      <h4 className="font-bold">{assign.type}</h4>
-                      <p className="text-sm text-gray-600">For: {assign.targetName}</p>
+                      <h4 className="font-bold text-base mb-1" style={{ color: '#e2e8f0' }}>
+                        {assign.type}
+                      </h4>
+                      <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                        For: <span style={{ color: '#a78bfa' }}>{assign.targetName}</span>
+                      </p>
                     </div>
                     <button 
                       onClick={() => setActiveEvaluation(assign)}
-                      className="btn-primary px-4 py-1"
+                      className="btn-primary px-5 py-2 text-xs flex items-center gap-2"
                     >
-                      Start
+                      <span>▶</span> Start Evaluation
                     </button>
                   </div>
                 ))}
                 {pendingEvaluations.length === 0 && (
-                  <p className="text-gray-500 italic">No pending evaluations.</p>
+                  <div className="text-center py-10" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+                    <div className="text-4xl mb-3">✅</div>
+                    <p className="font-medium">All caught up!</p>
+                    <p className="text-xs mt-1">No pending evaluations at this time.</p>
+                  </div>
                 )}
               </div>
             </div>
 
-            <div className="card">
-              <h2 className="mb-6 border-b pb-4">Completed Evaluations</h2>
-              <div className="space-y-4">
+            {/* Completed Evaluations */}
+            <div className="glass-card">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold m-0" style={{ color: '#e2e8f0' }}>Completed Evaluations</h2>
+                {completedEvaluations.length > 0 && (
+                  <span className="badge badge-success">{completedEvaluations.length} done</span>
+                )}
+              </div>
+              <hr className="section-divider" style={{ margin: '0 0 1.25rem 0' }} />
+
+              <div className="space-y-3">
                 {completedEvaluations.map(assign => (
-                  <div key={assign.id} className="flex justify-between items-center p-4 border border-gray-200 bg-white opacity-60">
+                  <div key={assign.id} className="eval-item flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4" style={{ opacity: 0.7 }}>
                     <div>
-                      <h4 className="font-bold text-gray-700">{assign.type}</h4>
-                      <p className="text-sm text-gray-500">For: {assign.targetName}</p>
+                      <h4 className="font-bold text-base mb-1" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        {assign.type}
+                      </h4>
+                      <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.35)' }}>
+                        For: {assign.targetName}
+                      </p>
                     </div>
-                    <span className="text-sm font-semibold uppercase tracking-wider text-green-700 bg-green-50 px-3 py-1 border border-green-200">
-                      Completed
+                    <span className="badge badge-success">
+                      ✓ Completed
                     </span>
                   </div>
                 ))}
                 {completedEvaluations.length === 0 && (
-                  <p className="text-gray-500 italic">No completed evaluations yet.</p>
+                  <div className="text-center py-10" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+                    <div className="text-4xl mb-3">📝</div>
+                    <p className="font-medium">No completed evaluations yet.</p>
+                  </div>
                 )}
               </div>
             </div>
-          </>
+          </div>
         )}
 
         {activeTab === 'results' && <ResultsPortal />}

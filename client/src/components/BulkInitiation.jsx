@@ -85,88 +85,94 @@ export default function BulkInitiation() {
   };
 
   return (
-    <div className="card max-w-4xl mx-auto">
-      <h2 className="mb-6">Department Bulk Initiation</h2>
-      
-      <div className="mb-8 p-4 bg-gray-50 border-l-4 border-black text-sm">
-        <p className="font-semibold mb-2">Instructions:</p>
-        <p>Upload a CSV file containing the employees for a specific department. The system will automatically detect the Head of Department and randomly assign Up-level and Same/Sub-level peer evaluators for every employee, using the specific templates you select below.</p>
-        <p className="mt-2 font-mono text-xs bg-gray-200 p-2 inline-block">
-          Required Columns: name, email, department, designation, hierarchy_level
-        </p>
-        <p className="mt-1 text-xs text-gray-600">Note: hierarchy_level must be a number (e.g., 3 for Manager, 2 for Senior, 1 for Junior).</p>
-      </div>
-
-      {message && (
-        <div className="mb-6 p-4 bg-gray-100 border border-black font-medium text-center">
-          {message}
+    <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
+      <div className="glass-card">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">📁</span>
+          <h2 className="text-2xl font-bold gradient-text m-0">Department Bulk Initiation</h2>
         </div>
-      )}
+        
+        <div className="info-box mb-8">
+          <p className="font-bold mb-2" style={{ color: '#e2e8f0' }}>📘 Instructions</p>
+          <p>Upload a CSV file containing the employees for a specific department. The system will automatically detect the Head of Department and randomly assign Up-level and Same/Sub-level peer evaluators for every employee, using the specific templates you select below.</p>
+          <div className="mt-3 p-3 rounded-lg" style={{ background: 'rgba(0, 0, 0, 0.2)', fontFamily: 'monospace', fontSize: '0.75rem' }}>
+            <span style={{ color: '#a78bfa' }}>Required Columns:</span> name, email, department, designation, hierarchy_level
+          </div>
+          <p className="mt-2 text-xs" style={{ color: 'rgba(196, 181, 253, 0.6)' }}>
+            Note: hierarchy_level must be a number (e.g., 3 for Manager, 2 for Senior, 1 for Junior).
+          </p>
+        </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="border border-gray-200 p-6 bg-gray-50">
-          
-          <h3 className="mb-4 text-lg border-b pb-2">Select Perspective Templates</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div>
-              <label className="block text-sm font-medium mb-1">Self-Evaluation Template</label>
-              <select value={selfTemplateId} onChange={(e) => setSelfTemplateId(e.target.value)} required className="w-full">
-                <option value="">Select Template...</option>
-                {templates.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
-              </select>
-            </div>
+        {message && (
+          <div className="message-box mb-6">
+            {message}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="glass-section">
             
-            <div>
-              <label className="block text-sm font-medium mb-1">Primary Evaluator (HoD) Template</label>
-              <select value={primaryTemplateId} onChange={(e) => setPrimaryTemplateId(e.target.value)} required className="w-full">
-                <option value="">Select Template...</option>
-                {templates.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
-              </select>
+            <h3 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#e2e8f0' }}>
+              <span>📝</span> Select Perspective Templates
+            </h3>
+            <hr className="section-divider" style={{ margin: '0 0 1.25rem 0' }} />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+              <div>
+                <label className="block text-sm font-semibold mb-2" style={{ color: '#c4b5fd' }}>Self-Evaluation Template</label>
+                <select value={selfTemplateId} onChange={(e) => setSelfTemplateId(e.target.value)} required>
+                  <option value="">Select Template...</option>
+                  {templates.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold mb-2" style={{ color: '#c4b5fd' }}>Primary Evaluator (HoD) Template</label>
+                <select value={primaryTemplateId} onChange={(e) => setPrimaryTemplateId(e.target.value)} required>
+                  <option value="">Select Template...</option>
+                  {templates.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2" style={{ color: '#c4b5fd' }}>Up-Level Peer Template</label>
+                <select value={upLevelTemplateId} onChange={(e) => setUpLevelTemplateId(e.target.value)} required>
+                  <option value="">Select Template...</option>
+                  {templates.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2" style={{ color: '#c4b5fd' }}>Same/Sub-Level Peer Template</label>
+                <select value={sameLevelTemplateId} onChange={(e) => setSameLevelTemplateId(e.target.value)} required>
+                  <option value="">Select Template...</option>
+                  {templates.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+                </select>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Up-Level Peer Template</label>
-              <select value={upLevelTemplateId} onChange={(e) => setUpLevelTemplateId(e.target.value)} required className="w-full">
-                <option value="">Select Template...</option>
-                {templates.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
-              </select>
-            </div>
+            <hr className="section-divider" />
 
             <div>
-              <label className="block text-sm font-medium mb-1">Same/Sub-Level Peer Template</label>
-              <select value={sameLevelTemplateId} onChange={(e) => setSameLevelTemplateId(e.target.value)} required className="w-full">
-                <option value="">Select Template...</option>
-                {templates.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
-              </select>
+              <label className="block text-sm font-semibold mb-2" style={{ color: '#c4b5fd' }}>📎 Department CSV File</label>
+              <input 
+                id="csv-upload"
+                type="file" 
+                accept=".csv" 
+                onChange={handleFileChange} 
+                required
+              />
             </div>
+
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1 border-t pt-4">Department CSV File</label>
-            <input 
-              id="csv-upload"
-              type="file" 
-              accept=".csv" 
-              onChange={handleFileChange} 
-              required
-              className="block w-full text-sm text-gray-500
-                file:mr-4 file:py-2 file:px-4
-                file:border file:border-black
-                file:text-sm file:font-semibold
-                file:bg-black file:text-white
-                hover:file:bg-gray-800 transition-colors cursor-pointer mt-2"
-            />
+          <div className="flex justify-end mt-8">
+            <button type="submit" disabled={loading} className="btn-primary px-8">
+              {loading ? '⏳ Processing...' : '🚀 Auto-Assign & Initiate'}
+            </button>
           </div>
-
-        </div>
-
-        <div className="flex justify-end mt-8">
-          <button type="submit" disabled={loading} className="btn-primary">
-            {loading ? 'Processing...' : 'Auto-Assign & Initiate'}
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }

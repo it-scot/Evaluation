@@ -70,59 +70,74 @@ export default function UserManagement() {
   };
 
   return (
-    <div className="card">
-      <h2 className="mb-6">User Management</h2>
-      
-      <div className="mb-8 bg-gray-50 p-4 border border-gray-200">
-        <h3 className="mb-2 text-lg">Bulk Import Users</h3>
-        <p className="text-sm text-gray-500 mb-4">
-          Upload a CSV file containing columns: name, email, department, designation, role.
-          Emails must be @scot.lk.
-        </p>
-        <div className="flex gap-4 items-center">
-          <input 
-            type="file" 
-            accept=".csv" 
-            onChange={handleFileChange}
-            className="flex-1 bg-white"
-          />
-          <button 
-            onClick={handleUpload} 
-            disabled={loading || !file}
-            className="btn-primary whitespace-nowrap disabled:opacity-50"
-          >
-            {loading ? 'Uploading...' : 'Upload CSV'}
-          </button>
+    <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
+      <div className="glass-card mb-6">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">👥</span>
+          <h2 className="text-2xl font-bold gradient-text m-0">User Management</h2>
         </div>
-        {message && <div className="mt-4 text-sm font-medium">{message}</div>}
+        
+        <div className="glass-section mb-0">
+          <h3 className="text-lg font-bold mb-2" style={{ color: '#e2e8f0' }}>Bulk Import Users</h3>
+          <p className="text-xs mb-5" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+            Upload a CSV file containing columns: <span style={{ color: '#a78bfa' }}>name, email, department, designation, role</span>.
+            Emails must be @scot.lk.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <input 
+              type="file" 
+              accept=".csv" 
+              onChange={handleFileChange}
+              className="flex-1"
+            />
+            <button 
+              onClick={handleUpload} 
+              disabled={loading || !file}
+              className="btn-primary whitespace-nowrap disabled:opacity-50"
+            >
+              {loading ? '⏳ Uploading...' : '📤 Upload CSV'}
+            </button>
+          </div>
+          {message && (
+            <div className="message-box mt-4">
+              {message}
+            </div>
+          )}
+        </div>
       </div>
 
-      <div>
-        <h3 className="mb-4 text-lg">Registered Users</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200 uppercase tracking-wider text-xs">
+      <div className="glass-card">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-bold m-0" style={{ color: '#e2e8f0' }}>Registered Users</h3>
+          <span className="badge badge-info">{users.length} users</span>
+        </div>
+        <div className="overflow-x-auto" style={{ borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
+          <table>
+            <thead>
               <tr>
-                <th className="p-3">Name</th>
-                <th className="p-3">Email</th>
-                <th className="p-3">Role</th>
-                <th className="p-3">Department</th>
-                <th className="p-3">Designation</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Department</th>
+                <th>Designation</th>
               </tr>
             </thead>
             <tbody>
               {users.map((u) => (
-                <tr key={u.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="p-3">{u.name}</td>
-                  <td className="p-3 font-medium">{u.email}</td>
-                  <td className="p-3 capitalize">{u.role}</td>
-                  <td className="p-3">{u.department}</td>
-                  <td className="p-3">{u.designation}</td>
+                <tr key={u.id}>
+                  <td className="font-semibold" style={{ color: '#e2e8f0' }}>{u.name}</td>
+                  <td style={{ color: '#a78bfa' }}>{u.email}</td>
+                  <td><span className="badge badge-info capitalize">{u.role}</span></td>
+                  <td>{u.department}</td>
+                  <td>{u.designation}</td>
                 </tr>
               ))}
               {users.length === 0 && (
                 <tr>
-                  <td colSpan="5" className="p-6 text-center text-gray-500">No users found.</td>
+                  <td colSpan="5" className="text-center py-10" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+                    <div className="text-3xl mb-2">👤</div>
+                    No users found.
+                  </td>
                 </tr>
               )}
             </tbody>

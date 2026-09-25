@@ -1,12 +1,21 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 import UserManagement from './UserManagement';
 import DepartmentManagement from './DepartmentManagement';
 import EvaluationTemplates from './EvaluationTemplates';
 import EvaluationInitiation from './EvaluationInitiation';
 import BulkInitiation from './BulkInitiation';
+
+const navItems = [
+  { key: 'dashboard', label: 'Dashboard Overview', icon: '📊' },
+  { key: 'users', label: 'User Management', icon: '👥' },
+  { key: 'departments', label: 'Department Management', icon: '🏢' },
+  { key: 'templates', label: 'Evaluation Templates', icon: '📋' },
+  { key: 'initiation', label: 'Manual Initiation', icon: '🎯' },
+  { key: 'bulk-initiation', label: 'Bulk Initiation (CSV)', icon: '📁' },
+];
 
 export default function AdminPanel() {
   const { user } = useAuth();
@@ -77,89 +86,88 @@ export default function AdminPanel() {
   return (
     <div className="flex flex-col md:flex-row gap-6">
       {/* Sidebar Navigation */}
-      <div className="w-full md:w-64 shrink-0 flex flex-col gap-2">
-        <button 
-          onClick={() => setActiveTab('dashboard')}
-          className={`text-left px-4 py-3 border transition-colors ${activeTab === 'dashboard' ? 'bg-black text-white border-black' : 'bg-white border-gray-200 hover:border-black'}`}
-        >
-          Dashboard Overview
-        </button>
-        <button 
-          onClick={() => setActiveTab('users')}
-          className={`text-left px-4 py-3 border transition-colors ${activeTab === 'users' ? 'bg-black text-white border-black' : 'bg-white border-gray-200 hover:border-black'}`}
-        >
-          User Management
-        </button>
-        <button 
-          onClick={() => setActiveTab('departments')}
-          className={`text-left px-4 py-3 border transition-colors ${activeTab === 'departments' ? 'bg-black text-white border-black' : 'bg-white border-gray-200 hover:border-black'}`}
-        >
-          Department Management
-        </button>
-        <button 
-          onClick={() => setActiveTab('templates')}
-          className={`text-left px-4 py-3 border transition-colors ${activeTab === 'templates' ? 'bg-black text-white border-black' : 'bg-white border-gray-200 hover:border-black'}`}
-        >
-          Evaluation Templates
-        </button>
-        <button 
-          onClick={() => setActiveTab('initiation')}
-          className={`text-left px-4 py-3 border transition-colors ${activeTab === 'initiation' ? 'bg-black text-white border-black' : 'bg-white border-gray-200 hover:border-black'}`}
-        >
-          Manual Initiation
-        </button>
-        <button 
-          onClick={() => setActiveTab('bulk-initiation')}
-          className={`text-left px-4 py-3 border transition-colors ${activeTab === 'bulk-initiation' ? 'bg-black text-white border-black' : 'bg-white border-gray-200 hover:border-black'}`}
-        >
-          Bulk Initiation (CSV)
-        </button>
+      <div className="w-full md:w-64 shrink-0">
+        <div className="glass-card p-3 flex flex-col gap-1.5" style={{ position: 'sticky', top: '80px' }}>
+          <div className="px-4 py-2 mb-2">
+            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: 'rgba(167, 139, 250, 0.6)' }}>Navigation</p>
+          </div>
+          {navItems.map(item => (
+            <button 
+              key={item.key}
+              onClick={() => setActiveTab(item.key)}
+              className={`nav-btn flex items-center gap-3 ${activeTab === item.key ? 'active' : ''}`}
+            >
+              <span className="text-base">{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         {activeTab === 'dashboard' && (
-          <div className="space-y-6">
-            <div className="card">
-              <h2 className="mb-6">HR Overview</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="border border-gray-200 p-6 text-center bg-gray-50">
-                  <h3 className="text-4xl mb-2">{stats.initiated}</h3>
-                  <p className="text-sm text-gray-500 uppercase tracking-wide">Total Initiated</p>
+          <div className="space-y-6" style={{ animation: 'fadeInUp 0.4s ease-out' }}>
+            {/* Stats */}
+            <div className="glass-card">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold gradient-text m-0">HR Overview</h2>
+                <span className="badge badge-info">Live</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="stat-card">
+                  <div className="stat-value">{stats.initiated}</div>
+                  <p className="stat-label">Total Initiated</p>
                 </div>
-                <div className="border border-gray-200 p-6 text-center bg-gray-50">
-                  <h3 className="text-4xl mb-2">{stats.completed}</h3>
-                  <p className="text-sm text-gray-500 uppercase tracking-wide">Completed</p>
+                <div className="stat-card">
+                  <div className="stat-value">{stats.completed}</div>
+                  <p className="stat-label">Completed</p>
                 </div>
-                <div className="border border-gray-200 p-6 text-center bg-gray-50">
-                  <h3 className="text-4xl mb-2">{stats.avgScore}%</h3>
-                  <p className="text-sm text-gray-500 uppercase tracking-wide">Avg Org Score</p>
+                <div className="stat-card">
+                  <div className="stat-value">{stats.avgScore}%</div>
+                  <p className="stat-label">Avg Org Score</p>
                 </div>
               </div>
             </div>
 
-            <div className="card">
-              <h3 className="text-xl mb-4 border-b pb-2">Active Evaluation Cycles</h3>
-              <div className="space-y-4">
+            {/* Active Evaluation Cycles */}
+            <div className="glass-card">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold m-0" style={{ color: '#e2e8f0' }}>Active Evaluation Cycles</h3>
+                <span className="text-xs font-semibold" style={{ color: 'rgba(167, 139, 250, 0.5)' }}>
+                  {evaluations.length} cycle{evaluations.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+              <hr className="section-divider" style={{ margin: '0 0 1.25rem 0' }} />
+
+              <div className="space-y-3">
                 {evaluations.map(e => (
-                  <div key={e.id} className="border border-gray-200 p-4 flex justify-between items-center bg-gray-50">
+                  <div key={e.id} className="eval-item flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                      <h4 className="font-semibold">{e.cycleId}</h4>
-                      <p className="text-sm text-gray-500">Target: {e.targetUserEmail}</p>
-                      <p className="text-sm text-gray-500">Status: <span className="font-medium text-black">{e.status}</span></p>
+                      <h4 className="font-bold text-base mb-1" style={{ color: '#e2e8f0' }}>{e.cycleId}</h4>
+                      <p className="text-xs mb-1" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>Target: {e.targetUserEmail}</p>
+                      <span className={`badge ${e.status === 'Completed' ? 'badge-success' : 'badge-warning'}`}>
+                        {e.status}
+                      </span>
                     </div>
                     {e.status !== 'Completed' && (
                       <button 
                         onClick={() => handleCalculateScore(e.cycleId)}
                         disabled={calculating}
-                        className="btn-secondary px-4 py-2"
+                        className="btn-secondary px-4 py-2 text-xs whitespace-nowrap"
                       >
-                        {calculating ? 'Processing...' : 'Finalize & Calculate Score'}
+                        {calculating ? 'Processing...' : '✨ Finalize & Calculate'}
                       </button>
                     )}
                   </div>
                 ))}
-                {evaluations.length === 0 && <p className="text-gray-500 italic">No evaluation cycles found.</p>}
+                {evaluations.length === 0 && (
+                  <div className="text-center py-10" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+                    <div className="text-4xl mb-3">📭</div>
+                    <p className="font-medium">No evaluation cycles found.</p>
+                    <p className="text-xs mt-1">Start by creating a new evaluation.</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

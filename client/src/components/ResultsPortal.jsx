@@ -36,44 +36,95 @@ export default function ResultsPortal() {
     fetchResults();
   }, [user]);
 
-  if (loading) return <div>Loading results...</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center py-20">
+      <div className="text-center loading-text">
+        <div className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin mx-auto mb-4" style={{ borderColor: '#a78bfa', borderTopColor: 'transparent' }}></div>
+        <p className="font-semibold" style={{ color: '#a78bfa' }}>Loading results...</p>
+      </div>
+    </div>
+  );
 
-  const getRatingString = (score) => {
-    if (score >= 90) return { label: 'Outstanding', color: 'bg-green-100 text-green-800 border-green-200' };
-    if (score >= 80) return { label: 'Meets Expectations', color: 'bg-blue-100 text-blue-800 border-blue-200' };
-    if (score >= 50) return { label: 'Meets Minimal Expectations', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' };
-    if (score >= 41) return { label: 'Needs Improvement', color: 'bg-orange-100 text-orange-800 border-orange-200' };
-    return { label: 'Unsatisfactory', color: 'bg-red-100 text-red-800 border-red-200' };
+  const getRatingInfo = (score) => {
+    if (score >= 90) return { label: 'Outstanding', emoji: '🌟', gradient: 'linear-gradient(135deg, #22c55e, #16a34a)', badgeClass: 'badge-success' };
+    if (score >= 80) return { label: 'Meets Expectations', emoji: '✅', gradient: 'linear-gradient(135deg, #6366f1, #818cf8)', badgeClass: 'badge-info' };
+    if (score >= 50) return { label: 'Meets Minimal', emoji: '📊', gradient: 'linear-gradient(135deg, #eab308, #ca8a04)', badgeClass: 'badge-warning' };
+    if (score >= 41) return { label: 'Needs Improvement', emoji: '⚠️', gradient: 'linear-gradient(135deg, #f97316, #ea580c)', badgeClass: 'badge-warning' };
+    return { label: 'Unsatisfactory', emoji: '❌', gradient: 'linear-gradient(135deg, #ef4444, #dc2626)', badgeClass: 'badge-danger' };
   };
 
   return (
-    <div className="card">
-      <h2 className="mb-6 border-b pb-4">My Final Scores</h2>
-      
-      <div className="space-y-6">
-        {results.map(res => {
-          const rating = getRatingString(res.finalScore);
-          return (
-            <div key={res.id} className="border border-gray-200 p-6 bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-6">
-              <div>
-                <h3 className="text-xl mb-1">{res.cycleId}</h3>
-                <p className="text-sm text-gray-500">Completed on: {new Date(res.completedAt || res.createdAt).toLocaleDateString()}</p>
-              </div>
-              <div className="flex flex-col items-end gap-2">
-                <div className="text-4xl font-serif font-bold text-black">{res.finalScore.toFixed(2)}%</div>
-                <span className={`px-4 py-1 border text-sm font-bold uppercase tracking-wider ${rating.color}`}>
-                  {rating.label}
-                </span>
-              </div>
-            </div>
-          );
-        })}
+    <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
+      <div className="glass-card">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">🏆</span>
+          <h2 className="text-2xl font-bold gradient-text m-0">My Final Scores</h2>
+        </div>
+        <hr className="section-divider" style={{ margin: '0 0 1.5rem 0' }} />
         
-        {results.length === 0 && (
-          <div className="text-center p-8 bg-gray-50 border border-gray-200 text-gray-500">
-            No finalized evaluations available yet.
-          </div>
-        )}
+        <div className="space-y-5">
+          {results.map(res => {
+            const rating = getRatingInfo(res.finalScore);
+            return (
+              <div key={res.id} className="eval-item">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
+                  <div className="flex items-start gap-4">
+                    <div className="text-3xl">{rating.emoji}</div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-1" style={{ color: '#e2e8f0' }}>{res.cycleId}</h3>
+                      <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                        Completed on: {new Date(res.completedAt || res.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col items-end gap-3">
+                    {/* Score Display */}
+                    <div className="text-right">
+                      <div className="text-4xl font-bold" style={{
+                        background: rating.gradient,
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text'
+                      }}>
+                        {res.finalScore.toFixed(2)}%
+                      </div>
+                    </div>
+                    
+                    {/* Rating Badge */}
+                    <span className={`badge ${rating.badgeClass}`}>
+                      {rating.label}
+                    </span>
+
+                    {/* Score Bar */}
+                    <div className="w-40 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255, 255, 255, 0.06)' }}>
+                      <div 
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${Math.min(res.finalScore, 100)}%`,
+                          background: rating.gradient,
+                          transition: 'width 1s ease-out'
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          
+          {results.length === 0 && (
+            <div className="text-center py-16" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+              <div className="text-5xl mb-4">📊</div>
+              <p className="font-semibold text-lg mb-1">No finalized evaluations yet</p>
+              <p className="text-sm">Your evaluation results will appear here once they are finalized by the administrator.</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
